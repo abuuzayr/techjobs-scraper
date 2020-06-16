@@ -15,10 +15,12 @@ const fs = require('fs')
 const axios = require('axios')
 
 axios.defaults.timeout = 5000;
-// axios.defaults.proxy = {
-//     host: '1.10.189.107',
-//     port: 33376,
-// }
+if (process.env.PROXY_HOST && process.env.PROXY_PORT) {
+    axios.defaults.proxy = {
+        host: process.env.PROXY_HOST,
+        port: process.env.PROXY_PORT,
+    }
+}
 
 const getJobs = async (url, count) => {
     try {
