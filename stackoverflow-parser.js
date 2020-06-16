@@ -22,13 +22,7 @@ const slugify = require('slugify')
 const cheerio = require('cheerio');
 const axios = require('axios')
 const parser = new Parser();
-
-if (process.env.PROXY_HOST && process.env.PROXY_PORT) {
-    axios.defaults.proxy = {
-        host: process.env.PROXY_HOST,
-        port: process.env.PROXY_PORT,
-    }
-}
+const getProxy = require('./get-proxies').getProxy
 
 async function parse() {
     let feed = await parser.parseURL('http://stackoverflow.com/jobs/feed?l=Singapore&u=Km&d=50');
@@ -74,9 +68,14 @@ async function parse() {
         let imgUrl = '', tagline = '', url = '', companySize = ''
         try {
             // Get the company image
+            const [proxy_host, proxy_port] = getProxy()
             const companyPage = await axios.get(`https://stackoverflow.com/jobs/companies/${co.slug}`, {
                 headers: {
                     'Content-Type': 'text/plain'
+                },
+                proxy: {
+                    host: proxy_host,
+                    port: proxy_port
                 }
             })
             const $ = cheerio.load(companyPage.data);
