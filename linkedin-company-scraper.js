@@ -119,7 +119,7 @@ async function getCompanyOrPeopleDetails(url) {
 	const html = await request({ 
 		url, 
 		jar,
-		proxy: `https://${proxy_host}:${proxy_port}`
+		proxy: `http://${proxy_host}:${proxy_port}`
 	 });
 	const $ = cheerio.load(html);
 	let data, result = { linkedinUrl: url.replace('/about/', '') };
