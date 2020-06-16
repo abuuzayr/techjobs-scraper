@@ -23,6 +23,13 @@ const cheerio = require('cheerio');
 const axios = require('axios')
 const parser = new Parser();
 
+if (process.env.PROXY_HOST && process.env.PROXY_PORT) {
+    axios.defaults.proxy = {
+        host: process.env.PROXY_HOST,
+        port: process.env.PROXY_PORT,
+    }
+}
+
 async function parse() {
     let feed = await parser.parseURL('http://stackoverflow.com/jobs/feed?l=Singapore&u=Km&d=50');
 
