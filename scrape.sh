@@ -2,6 +2,8 @@
 
 echo date
 
+node ./get-proxies.js
+
 node ./sync-company-data.js > ./logs/sync-company-data
 
 node ./stackoverflow-parser.js > ./logs/stackoverflow-parser
