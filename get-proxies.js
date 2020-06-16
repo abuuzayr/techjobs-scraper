@@ -7,7 +7,7 @@ async function getProxies() {
   fs.writeFileSync('./proxies.json', JSON.stringify(proxies.data.split("\r\n")));
 }
 
-async function getProxy() {
+function getProxy() {
     const proxies = require('./proxies.json');
     // get random index
     const index = Math.floor(Math.random() * proxies.length)
@@ -21,5 +21,5 @@ module.exports = {
 
 (async () => {
     await getProxies()
-    await getProxy()
+    getProxy()
 })()
