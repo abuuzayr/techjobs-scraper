@@ -114,7 +114,11 @@ async function getCompanyOrPeopleDetails(url) {
 		fs.writeFileSync(debugFile, '');
 
 	console.log(`Sending request to ${url}...`);
-	const html = await request({ url, jar });
+	const options = { url, jar }
+	if (process.env.PROXY_HOST && process.env.PROXY_PORT) {
+		options.proxy = `http://${process.env.PROXY_HOST}:${process.env.PROXY_PORT}`
+	}
+	const html = await request(options);
 	const $ = cheerio.load(html);
 	let data, result = { linkedinUrl: url.replace('/about/', '') };
 	while (!result.name && !result.firstName) {
