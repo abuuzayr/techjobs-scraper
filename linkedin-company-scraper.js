@@ -4,6 +4,7 @@ const cheerio = require('cheerio');
 const fs = require('fs');
 const request = require('request-promise');
 const Entities = require('html-entities').XmlEntities;
+const getProxy = require('./get-proxies').getProxy
  
 const debugFile = './assets/debug.json';
 
@@ -114,11 +115,12 @@ async function getCompanyOrPeopleDetails(url) {
 		fs.writeFileSync(debugFile, '');
 
 	console.log(`Sending request to ${url}...`);
-	const options = { url, jar }
-	if (process.env.PROXY_HOST && process.env.PROXY_PORT) {
-		options.proxy = `http://${process.env.PROXY_HOST}:${process.env.PROXY_PORT}`
-	}
-	const html = await request(options);
+	const [proxy_host, proxy_port] = getProxy()
+	const html = await request({ 
+		url, 
+		jar,
+		proxy: `https://${proxy_host}:${proxy_port}`
+	 });
 	const $ = cheerio.load(html);
 	let data, result = { linkedinUrl: url.replace('/about/', '') };
 	while (!result.name && !result.firstName) {
