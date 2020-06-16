@@ -22,6 +22,13 @@ const axios = require('axios');
 const path = require('path');
 const puppeteer = require('puppeteer');
 
+if (process.env.PROXY_HOST && process.env.PROXY_PORT) {
+  axios.defaults.proxy = {
+    host: process.env.PROXY_HOST,
+    port: process.env.PROXY_PORT,
+  }
+}
+
 function extractItems() {
   const extractedElements = document.querySelectorAll('article[data-cy="job-result"]');
   const items = [];
