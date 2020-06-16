@@ -1,0 +1,26 @@
+{
+  "name": "scraper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "scraper.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "airtable": "^0.8.1",
+    "axios": "^0.19.2",
+    "cheerio": "^1.0.0-rc.3",
+    "dotenv": "^8.2.0",
+    "form-data": "^3.0.0",
+    "html-entities": "^1.2.1",
+    "image-to-blob": "^0.2.0",
+    "puppeteer": "^3.0.2",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.2",
+    "rss-parser": "^3.7.6",
+    "sharp": "^0.25.3",
+    "slugify": "^1.4.0"
+  }
+}
