@@ -34,9 +34,9 @@ async function getEFCData(url) {
   page.setViewport({ width: 1280, height: 926 });
 
   // Navigate to the demo page.
-  await page.goto(url, { waitUntil: 'networkidle0', timeout: 30000 });
+  await page.goto(url, { waitUntil: 'networkidle0', timeout: 180000 });
 
-  await page.waitForSelector('#jobTitleStickyTopDiv', { visible: true, timeout: 30000 });
+  await page.waitForSelector('#jobTitleStickyTopDiv', { visible: true, timeout: 180000 });
 
   // // Get the number of jobs from the dropdown filter
   // const count = await page.$eval('#totalJobCount', el => el.textContent);
