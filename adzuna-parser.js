@@ -13,19 +13,10 @@
 require('dotenv').config()
 const fs = require('fs')
 const axios = require('axios')
-const getProxy = require('./get-proxies').getProxy
-
-axios.defaults.timeout = 5000;
 
 const getJobs = async (url, count) => {
     try {
-        const [proxy_host, proxy_port] = getProxy()
-        const response = await axios.get(url, {
-            proxy: {
-                host: proxy_host,
-                port: proxy_port
-            }
-        })
+        const response = await axios.get(url)
         if (response) {
             count = response.data.count
             for (let i = 0; i < response.data.results.length; i++) {
@@ -67,15 +58,10 @@ const parseToPost = async item => {
         let companyAbout = ''
         if (job.url) {
             try {
-                const [proxy_host, proxy_port] = getProxy()
                 const response = await axios.get(job.url, {
                     headers: {
                         'Content-Type': 'text/plain'
                     },
-                    proxy: {
-                        host: proxy_host,
-                        port: proxy_port
-                    }
                 })
                 if (response) {
                     const source = response.data.split('You are now being redirected to <strong>')[1].split('</strong>')[0]
