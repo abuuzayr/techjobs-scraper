@@ -1,5 +1,5 @@
 #!/bin/bash
-dirpath=/home/abuuzayr/techjobs-scraper
+dirpath=~/techjobs-scraper
 
 echo $(date -u)
 
@@ -17,11 +17,11 @@ node "$dirpath/stackoverflow-parser.js" > "$dirpath/logs/stackoverflow-parser"
 
 echo "getting jobs from techinasia.."
 
-node "$dirpath/techinasia-scraper.js" > "$dirpath/logs/techinasia-scraper"
+node "$dirpath/techinasia-scraper.js" 1 > "$dirpath/logs/techinasia-scraper"
 
 echo "getting jobs from adzuna.."
 
-node "$dirpath/adzuna-parser.js" > "$dirpath/logs/adzuna-parser"
+node "$dirpath/adzuna-parser.js" 1 > "$dirpath/logs/adzuna-parser"
 
 echo "done!"
 
