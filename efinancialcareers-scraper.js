@@ -23,12 +23,25 @@ async function extractItems() {
   })
 }
 
-async function getEFCData(url) {
+async function getEFCData(url, proxy) {
   // Set up browser and page.
-  const [proxy_host, proxy_port] = getProxy()
+  const args = [
+    '--no-sandbox',
+    '--disable-setuid-sandbox',
+    '--disable-dev-shm-usage',
+    '--disable-accelerated-2d-canvas',
+    '--no-first-run',
+    '--no-zygote',
+    '--single-process',
+    '--disable-gpu'
+  ]
+  if (proxy) {
+    const [proxy_host, proxy_port] = getProxy()
+    args.push(`--proxy-server=http://${proxy_host}:${proxy_port}`)
+  }
   const browser = await puppeteer.launch({
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox', `--proxy-server=http://${proxy_host}:${proxy_port}`],
+    args
   });
   const page = await browser.newPage();
   page.setViewport({ width: 1280, height: 926 });
