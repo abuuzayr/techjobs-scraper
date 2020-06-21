@@ -1,5 +1,5 @@
 #!/bin/bash
-dirpath=~/techjobs-scraper
+dirpath=$HOME/techjobs-scraper
 
 echo $(date -u)
 
