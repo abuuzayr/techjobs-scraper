@@ -2,7 +2,11 @@ require('dotenv').config()
 
 async function sync() {
     try {
-        const base = require('airtable').base('appjZBRulMFmg0cOi');
+        const Airtable = require('airtable');
+        Airtable.configure({
+            apiKey: process.env.AIRTABLE_API_KEY
+        });
+        const base = Airtable.base('appjZBRulMFmg0cOi');
         const axios = require('axios')
         // Get companies from DB and push to airtable if not there
 
