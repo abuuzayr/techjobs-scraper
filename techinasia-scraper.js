@@ -16,7 +16,7 @@
 //     "source": "Tech In Asia"
 // },
 
-require('dotenv').config()
+require('dotenv').config({ path: __dirname + '/.env' })
 const fs = require('fs');
 const axios = require('axios');
 const path = require('path');
