@@ -115,9 +115,9 @@ async function parse(proxy) {
     let count = 1
     const itemsPerPage = 50
 
-    let allAggIds = await axios.get(`${process.env.TECHJOBS_API}/api/getAllJobs?select=aggId`)
+    let allAggIds = await axios.get(`${process.env.TECHJOBS_API}/api/getAllJobs`)
     if (allAggIds) {
-        allAggIds = allAggIds.data.filter(job => job.aggId && job.aggId.includes('ADZ-----')).map(job => job.aggId.replace('ADZ-----', ''))
+        allAggIds = allAggIds.data.filter(job => job.aggId && job.aggId.includes('ADZ-----') && job.description).map(job => job.aggId.replace('ADZ-----', ''))
     } else {
         console.log("cannot get current IDs")
         return
@@ -133,6 +133,7 @@ async function parse(proxy) {
         }
         // break
     }
+    return
 }
 
 (async () => {
