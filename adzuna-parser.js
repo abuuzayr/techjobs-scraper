@@ -14,13 +14,15 @@ require('dotenv').config({ path: __dirname + '/.env' })
 const fs = require('fs')
 const axios = require('axios')
 
-const getJobs = async (url, count, proxy) => {
+const getJobs = async (url, count, proxy, allAggIds) => {
     try {
         const response = await axios.get(url)
         if (response) {
             count = response.data.count
-            for (let i = 0; i < response.data.results.length; i++) {
-                await parseToPost(response.data.results[i], proxy)
+            const results = response.data.results.filter(job => !allAggIds.includes(job.id))
+            console.log("results.count: ", results.length)
+            for (let i = 0; i < results.length; i++) {
+                await parseToPost(results[i], proxy)
             }
             // response.data.results.forEach(result => parseToPost(result));
         }
@@ -113,11 +115,19 @@ async function parse(proxy) {
     let count = 1
     const itemsPerPage = 50
 
+    let allAggIds = await axios.get(`${process.env.TECHJOBS_API}/api/getAllJobs?select=aggId`)
+    if (allAggIds) {
+        allAggIds = allAggIds.data.filter(job => job.aggId && job.aggId.includes('ADZ-----')).map(job => job.aggId.replace('ADZ-----', ''))
+    } else {
+        console.log("cannot get current IDs")
+        return
+    }
+
     while ((page * itemsPerPage) < count) {
         page++
         try {
             console.log("count: ", count)
-            count = await getJobs(`http://api.adzuna.com/v1/api/jobs/sg/search/${page}?app_id=cbd5e3be&app_key=1e1a32f997d8d1a1145207a17a775aca&results_per_page=${itemsPerPage}&full_time=1&content-type=application/json&category=it-jobs`, count, proxy)
+            count = await getJobs(`http://api.adzuna.com/v1/api/jobs/sg/search/${page}?app_id=cbd5e3be&app_key=1e1a32f997d8d1a1145207a17a775aca&results_per_page=${itemsPerPage}&full_time=1&content-type=application/json&category=it-jobs`, count, proxy, allAggIds)
         } catch (e) {
             console.log(e)
         }
