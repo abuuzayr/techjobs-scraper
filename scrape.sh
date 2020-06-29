@@ -23,6 +23,10 @@ echo "getting jobs from adzuna.."
 
 node "$dirpath/adzuna-parser.js" 1 > "$dirpath/logs/adzuna-parser"
 
+echo "getting jobs from mycareersfuture.."
+
+node "$dirpath/mcf-parser.js" > "$dirpath/logs/mcf-parser"
+
 echo "done!"
 
 exit 0
