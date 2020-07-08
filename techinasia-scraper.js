@@ -207,10 +207,14 @@ async function parse(proxy) {
   await browser.close();
 }
 
-(async () => {
-  await parse(process.argv[2])
-})();
+if (require.main === module) {
+  (async () => {
+    await parse(process.argv[2])
+  })();
+}
+
 
 module.exports = {
-  parse
+  parse,
+  reuploadImages
 }
