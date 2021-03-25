@@ -26,7 +26,7 @@ jobs:
           check-latest: true
       - run: npm install
       - run: ./scrape.sh
-        env: |
+        env:
           AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
           TECHJOBS_API: https://techjobs.sg
           LI_AT_COOKIE: ${{ secrets.LI_AT_COOKIE }}
