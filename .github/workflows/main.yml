@@ -25,8 +25,18 @@ jobs:
           node-version: '14'
           check-latest: true
       - run: npm install
-      - run: ./scrape.sh
+      - name: sync company data
+        run: node sync-company-data.js
         env:
           AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
           TECHJOBS_API: https://techjobs.sg
-          LI_AT_COOKIE: ${{ secrets.LI_AT_COOKIE }}
+      - name: get jobs from stackoverflow
+        run: node stackoverflow-parser.js
+        env:
+          AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
+          TECHJOBS_API: https://techjobs.sg
+      - name: get jobs from techinasia
+        run: node techinasia-scraper.js
+        env:
+          AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
+          TECHJOBS_API: https://techjobs.sg
