@@ -1,4 +1,4 @@
-require('dotenv').config({ path: __dirname + '/.env' })
+
 
 async function sync() {
     try {

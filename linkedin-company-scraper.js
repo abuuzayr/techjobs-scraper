@@ -1,4 +1,4 @@
-require('dotenv').config({ path: __dirname + '/.env' })
+
 const COOKIE = process.env.LI_AT_COOKIE
 const cheerio = require('cheerio');
 const fs = require('fs');
