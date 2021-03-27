@@ -15,7 +15,7 @@
 //     "description": "..."
 // }
 
-require('dotenv').config({ path: __dirname + '/.env' })
+
 const fs = require('fs')
 const Parser = require('rss-parser');
 const slugify = require('slugify')
@@ -89,7 +89,8 @@ async function parse() {
             }
         } catch (e) { }
         if (company.status === 200) {
-            await axios.put(`${process.env.TECHJOBS_API}/api/updateCompany`, { ...company.data, imgUrl: imgUrl || 'https://', tagline, url, companySize })
+            const { id, ...onlyRequiredData } = company.data
+            await axios.put(`${process.env.TECHJOBS_API}/api/updateCompany`, { ...onlyRequiredData, imgUrl: imgUrl || 'https://', tagline, url, companySize })
         } else {
             console.log(co.name)
             console.log(company.status)

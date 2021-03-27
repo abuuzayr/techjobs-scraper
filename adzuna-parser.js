@@ -10,7 +10,7 @@
 //     "source": "eFinancialCareers,Adzuna"
 // }
 
-require('dotenv').config({ path: __dirname + '/.env' })
+
 const fs = require('fs')
 const axios = require('axios')
 
@@ -93,7 +93,8 @@ const parseToPost = async (item, proxy) => {
                 })
                 if (company.status === 200 && company.data.about) return
                 if (company.status === 200) {
-                    await axios.put(`${process.env.TECHJOBS_API}/api/updateCompany`, { ...company.data, about: companyAbout })
+                    const { id, ...onlyRequiredData } = company.data
+                    await axios.put(`${process.env.TECHJOBS_API}/api/updateCompany`, { ...onlyRequiredData, about: companyAbout })
                 }
                 console.log('updated ', job.company)
             } catch (e) {

@@ -31,7 +31,7 @@
 //     "source": "myCareersFuture"
 // }
 
-require('dotenv').config({ path: __dirname + '/.env' })
+
 const fs = require('fs')
 const axios = require('axios')
 const items = []
@@ -73,7 +73,7 @@ const parseToPost = async (item) => {
                 })
                 if (company.status === 200 && company.data.about) return
                 if (company.status === 200) {
-                    const data = { ...company.data }
+                    const { id, ...data } = company.data
                     if (item.postedCompany.description) data['about'] = item.postedCompany.description
                     if (item.postedCompany.companyUrl) data['url'] = item.postedCompany.companyUrl
                     if (item.postedCompany.employeeCount) data['companySize'] = item.postedCompany.employeeCount + " employees"
