@@ -92,7 +92,7 @@ const parseToPost = async (item) => {
     }
 }
 
-async function parse(proxy) {
+async function parse() {
     const urls = [
         'https://api1.mycareersfuture.sg/v2/jobs?employmentTypes=Permanent&limit=100&omitCountWithSchemes=true&page=0&search=Software%20Developer&sortBy=new_posting_date&salary=0',
         'https://api1.mycareersfuture.sg/v2/jobs?employmentTypes=Full%20Time&limit=100&omitCountWithSchemes=true&page=0&search=Software%20Developer&sortBy=new_posting_date&salary=0'
@@ -113,7 +113,7 @@ async function parse(proxy) {
                 const results = response.data.results.filter(job => !allAggIds.includes(job.uuid))
                 console.log(results.length)
                 for (let i = 0; i < results.length; i++) {
-                    await parseToPost(results[i], proxy)
+                    await parseToPost(results[i])
                 }
                 url = response.data._links.next && response.data._links.next.href
                 if (!url) break

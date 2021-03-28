@@ -14,7 +14,7 @@
 const fs = require('fs')
 const axios = require('axios')
 
-const getJobs = async (url, count, proxy, allAggIds) => {
+const getJobs = async (url, count, allAggIds) => {
     try {
         const response = await axios.get(url)
         if (response) {
@@ -22,7 +22,7 @@ const getJobs = async (url, count, proxy, allAggIds) => {
             const results = response.data.results.filter(job => !allAggIds.includes(job.id))
             console.log("results.count: ", results.length)
             for (let i = 0; i < results.length; i++) {
-                await parseToPost(results[i], proxy)
+                await parseToPost(results[i])
             }
             // response.data.results.forEach(result => parseToPost(result));
         }
@@ -32,7 +32,7 @@ const getJobs = async (url, count, proxy, allAggIds) => {
     }
 }
 
-const parseToPost = async (item, proxy) => {
+const parseToPost = async (item) => {
     try {
         let salary = '',
             min = item.salary_min ? new Intl.NumberFormat('en-SG', { style: 'currency', currency: 'SGD' }).format(item.salary_min).split('.')[0] : '',
@@ -71,7 +71,7 @@ const parseToPost = async (item, proxy) => {
                     if (source === 'eFinancialCareers') {
                         console.log('getting EFC data for ', job.aggId, '...')
                         const getEFCData = require('./efinancialcareers-scraper').getEFCData
-                        const additional = await getEFCData(job.url, proxy)
+                        const additional = await getEFCData(job.url)
                         job.avatar = additional.image
                         job.description = additional.about
                         companyAbout = additional.companyAbout
@@ -106,7 +106,7 @@ const parseToPost = async (item, proxy) => {
     }
 }
 
-async function parse(proxy) {
+async function parse() {
     const urls = [
         'https://api.adzuna.com/v1/api/jobs/sg/search/1?app_id=cbd5e3be&app_key=1e1a32f997d8d1a1145207a17a775aca&results_per_page=715&full_time=1&content-type=application/json&category=it-jobs',
         'https://api.adzuna.com/v1/api/jobs/sg/search/1?app_id=cbd5e3be&app_key=1e1a32f997d8d1a1145207a17a775aca&results_per_page=715&permanent=1&content-type=application/json&category=it-jobs'
@@ -128,7 +128,7 @@ async function parse(proxy) {
         page++
         try {
             console.log("count: ", count)
-            count = await getJobs(`http://api.adzuna.com/v1/api/jobs/sg/search/${page}?app_id=cbd5e3be&app_key=1e1a32f997d8d1a1145207a17a775aca&results_per_page=${itemsPerPage}&full_time=1&content-type=application/json&category=it-jobs`, count, proxy, allAggIds)
+            count = await getJobs(`http://api.adzuna.com/v1/api/jobs/sg/search/${page}?app_id=cbd5e3be&app_key=1e1a32f997d8d1a1145207a17a775aca&results_per_page=${itemsPerPage}&full_time=1&content-type=application/json&category=it-jobs`, count, allAggIds)
         } catch (e) {
             console.log(e)
         }
@@ -138,7 +138,7 @@ async function parse(proxy) {
 }
 
 (async () => {
-    await parse(process.argv[2])
+    await parse()
 })();
 
 module.exports = {

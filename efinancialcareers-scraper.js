@@ -1,6 +1,5 @@
 const fs = require('fs');
 const puppeteer = require('puppeteer');
-const getProxy = require('./get-proxies').getProxy
 
 async function extractItems() {
   const imgEl = document.querySelector('span.d-flex img[src*="http"]')
@@ -23,7 +22,7 @@ async function extractItems() {
   })
 }
 
-async function getEFCData(url, proxy) {
+async function getEFCData(url) {
   // Set up browser and page.
   const args = [
     '--no-sandbox',
@@ -35,10 +34,6 @@ async function getEFCData(url, proxy) {
     '--single-process',
     '--disable-gpu'
   ]
-  if (proxy) {
-    const [proxy_host, proxy_port] = getProxy()
-    args.push(`--proxy-server=http://${proxy_host}:${proxy_port}`)
-  }
   const browser = await puppeteer.launch({
     headless: true,
     args

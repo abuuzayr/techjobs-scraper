@@ -21,7 +21,6 @@ const fs = require('fs');
 const axios = require('axios');
 const path = require('path');
 const puppeteer = require('puppeteer');
-const getProxy = require('./get-proxies').getProxy
 
 function extractItems() {
   const extractedElements = document.querySelectorAll('article[data-cy="job-result"]');
@@ -115,7 +114,7 @@ async function reuploadImages(url) {
   }
 }
 
-async function parse(proxy) {
+async function parse() {
   // Set up browser and page.
   const args = [
     '--no-sandbox',
@@ -127,10 +126,6 @@ async function parse(proxy) {
     '--single-process',
     '--disable-gpu'
   ]
-  if (proxy) {
-    const [proxy_host, proxy_port] = getProxy()
-    args.push(`--proxy-server=http://${proxy_host}:${proxy_port}`)
-  }
   const browser = await puppeteer.launch({
     headless: true,
     args,
@@ -209,7 +204,7 @@ async function parse(proxy) {
 
 if (require.main === module) {
   (async () => {
-    await parse(process.argv[2])
+    await parse()
   })();
 }
 
