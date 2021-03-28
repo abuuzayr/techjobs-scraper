@@ -25,7 +25,7 @@ jobs:
           check-latest: true
       - run: npm install
       - name: get jobs from stackoverflow
-        run: node stackoverflow-parser.js
+        run: node stackoverflow-parser.js --trace-warnings
         env:
           TECHJOBS_API: https://techjobs.sg
   techinasia:
@@ -39,7 +39,7 @@ jobs:
           check-latest: true
       - run: npm install      
       - name: get jobs from techinasia
-        run: node techinasia-scraper.js
+        run: node techinasia-scraper.js --trace-warnings
         env:
           TECHJOBS_API: https://techjobs.sg
   adzuna:
@@ -53,7 +53,7 @@ jobs:
           check-latest: true
       - run: npm install      
       - name: get jobs from adzuna
-        run: node adzuna-parser.js
+        run: node adzuna-parser.js --trace-warnings
         env:
           TECHJOBS_API: https://techjobs.sg
   mycareersfuture:
@@ -67,7 +67,7 @@ jobs:
           check-latest: true
       - run: npm install      
       - name: get jobs from mycareersfuture
-        run: node mcf-parser.js
+        run: node mcf-parser.js --trace-warnings
         env:
           TECHJOBS_API: https://techjobs.sg
   sync-company-data:
@@ -81,7 +81,7 @@ jobs:
           check-latest: true
       - run: npm install      
       - name: sync company data
-        run: node sync-company-data.js
+        run: node sync-company-data.js --trace-warnings
         env:
           AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
           TECHJOBS_API: https://techjobs.sg
