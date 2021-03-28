@@ -98,12 +98,17 @@ async function parse() {
         'https://api1.mycareersfuture.sg/v2/jobs?employmentTypes=Full%20Time&limit=100&omitCountWithSchemes=true&page=0&search=Software%20Developer&sortBy=new_posting_date&salary=0'
     ]
 
-    let allAggIds = await axios.get(`${process.env.TECHJOBS_API}/api/getAllJobs`)
-    if (allAggIds) {
-        allAggIds = allAggIds.data.filter(job => job.aggId && job.aggId.includes('MCF-----')).map(job => job.aggId.replace('MCF-----', ''))
-    } else {
-        console.log("cannot get current IDs")
-        return
+    try {
+        let allAggIds = await axios.get(`${process.env.TECHJOBS_API}/api/getAllJobs`)
+        if (allAggIds) {
+            allAggIds = allAggIds.data.filter(job => job.aggId && job.aggId.includes('MCF-----')).map(job => job.aggId.replace('MCF-----', ''))
+        } else {
+            console.log("cannot get current IDs")
+            return
+        }
+    } catch (e) {
+        console.log('getAllJobs failure')
+        console.log(e)
     }
 
     for (let url of urls) {

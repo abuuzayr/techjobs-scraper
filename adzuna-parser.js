@@ -116,25 +116,30 @@ async function parse() {
     let count = 1
     const itemsPerPage = 50
 
-    let allAggIds = await axios.get(`${process.env.TECHJOBS_API}/api/getAllJobs`)
-    if (allAggIds) {
-        allAggIds = allAggIds.data.filter(job => job.aggId && job.aggId.includes('ADZ-----') && job.description).map(job => job.aggId.replace('ADZ-----', ''))
-    } else {
-        console.log("cannot get current IDs")
-        return
-    }
-
-    while ((page * itemsPerPage) < count) {
-        page++
-        try {
-            console.log("count: ", count)
-            count = await getJobs(`http://api.adzuna.com/v1/api/jobs/sg/search/${page}?app_id=cbd5e3be&app_key=1e1a32f997d8d1a1145207a17a775aca&results_per_page=${itemsPerPage}&full_time=1&content-type=application/json&category=it-jobs`, count, allAggIds)
-        } catch (e) {
-            console.log(e)
+    try {
+        let allAggIds = await axios.get(`${process.env.TECHJOBS_API}/api/getAllJobs`)
+        if (allAggIds) {
+            allAggIds = allAggIds.data.filter(job => job.aggId && job.aggId.includes('ADZ-----') && job.description).map(job => job.aggId.replace('ADZ-----', ''))
+        } else {
+            console.log("cannot get current IDs")
+            return
         }
-        // break
+    
+        while ((page * itemsPerPage) < count) {
+            page++
+            try {
+                console.log("count: ", count)
+                count = await getJobs(`http://api.adzuna.com/v1/api/jobs/sg/search/${page}?app_id=cbd5e3be&app_key=1e1a32f997d8d1a1145207a17a775aca&results_per_page=${itemsPerPage}&full_time=1&content-type=application/json&category=it-jobs`, count, allAggIds)
+            } catch (e) {
+                console.log(e)
+            }
+            // break
+        }
+        return
+    } catch (e) {
+        console.log('get jobs failure')
+        console.log(e)
     }
-    return
 }
 
 (async () => {
