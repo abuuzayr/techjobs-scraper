@@ -52,7 +52,9 @@ module.exports = {
   getGlassdoorData
 };
 
-(async () => {
-  const items = await getGlassdoorData('https://www.glassdoor.com/Overview/Working-at-McGregor-Boyall-Associates-EI_IE393992.11,37.htm');
-  console.log(items);
-})();
+if (require.main === module) {
+  (async () => {
+    const items = await getGlassdoorData('https://www.glassdoor.com/Overview/Working-at-McGregor-Boyall-Associates-EI_IE393992.11,37.htm');
+    console.log(items);
+  })();
+}
