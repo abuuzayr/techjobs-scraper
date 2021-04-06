@@ -6,8 +6,12 @@ const puppeteer = require('puppeteer');
 async function extractItems() {
   const items = {}
 
-  items.rating = document.querySelector('.v2__EIReviewsRatingsStylesV2__ratingNum').innerText
-  items.reviewCount = document.querySelector('.eiCell.cell.reviews .num').innerText.trim()
+  try {
+    items.rating = document.querySelector('[data-test="statsLink"] > div:first-child').innerText
+  } catch (e) {}
+  try {
+    items.reviewCount = document.querySelector('.eiCell.cell.reviews .num').innerText.trim()
+  } catch (e) {}
 
   return items
 }
@@ -49,6 +53,6 @@ module.exports = {
 };
 
 (async () => {
-  const items = await getGlassdoorData('https://www.glassdoor.sg/facebook');
+  const items = await getGlassdoorData('https://www.glassdoor.com/Overview/Working-at-McGregor-Boyall-Associates-EI_IE393992.11,37.htm');
   console.log(items);
 })();
