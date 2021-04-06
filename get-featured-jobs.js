@@ -1,4 +1,4 @@
-require('dotenv').config({ path: __dirname + '/.env' })
+
 
 const reuploadImages = require('./techinasia-scraper').reuploadImages
 const showdown = require('showdown'), converter = new showdown.Converter()

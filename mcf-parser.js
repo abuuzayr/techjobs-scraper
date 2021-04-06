@@ -31,7 +31,7 @@
 //     "source": "myCareersFuture"
 // }
 
-require('dotenv').config({ path: __dirname + '/.env' })
+
 const fs = require('fs')
 const axios = require('axios')
 const items = []
@@ -73,7 +73,7 @@ const parseToPost = async (item) => {
                 })
                 if (company.status === 200 && company.data.about) return
                 if (company.status === 200) {
-                    const data = { ...company.data }
+                    const { id, ...data } = company.data
                     if (item.postedCompany.description) data['about'] = item.postedCompany.description
                     if (item.postedCompany.companyUrl) data['url'] = item.postedCompany.companyUrl
                     if (item.postedCompany.employeeCount) data['companySize'] = item.postedCompany.employeeCount + " employees"
@@ -92,36 +92,40 @@ const parseToPost = async (item) => {
     }
 }
 
-async function parse(proxy) {
+async function parse() {
     const urls = [
         'https://api1.mycareersfuture.sg/v2/jobs?employmentTypes=Permanent&limit=100&omitCountWithSchemes=true&page=0&search=Software%20Developer&sortBy=new_posting_date&salary=0',
         'https://api1.mycareersfuture.sg/v2/jobs?employmentTypes=Full%20Time&limit=100&omitCountWithSchemes=true&page=0&search=Software%20Developer&sortBy=new_posting_date&salary=0'
     ]
 
-    let allAggIds = await axios.get(`${process.env.TECHJOBS_API}/api/getAllJobs`)
-    if (allAggIds) {
-        allAggIds = allAggIds.data.filter(job => job.aggId && job.aggId.includes('MCF-----')).map(job => job.aggId.replace('MCF-----', ''))
-    } else {
-        console.log("cannot get current IDs")
-        return
-    }
-
-    for (let url of urls) {
-        while (true) {
-            try {
-                const response = await axios.get(url)
-                const results = response.data.results.filter(job => !allAggIds.includes(job.uuid))
-                console.log(results.length)
-                for (let i = 0; i < results.length; i++) {
-                    await parseToPost(results[i], proxy)
+    try {
+        let allAggIds = await axios.get(`${process.env.TECHJOBS_API}/api/getAllJobs`)
+        if (allAggIds) {
+            allAggIds = allAggIds.data.filter(job => job.aggId && job.aggId.includes('MCF-----')).map(job => job.aggId.replace('MCF-----', ''))
+            for (let url of urls) {
+                while (true) {
+                    try {
+                        const response = await axios.get(url)
+                        const results = response.data.results.filter(job => !allAggIds.includes(job.uuid))
+                        console.log(results.length)
+                        for (let i = 0; i < results.length; i++) {
+                            await parseToPost(results[i])
+                        }
+                        url = response.data._links.next && response.data._links.next.href
+                        if (!url) break
+                    } catch (e) {
+                        console.log(e)
+                    }
                 }
-                url = response.data._links.next && response.data._links.next.href
-                if (!url) break
-            } catch (e) {
-                console.log(e)
+                // fs.writeFileSync('./mcf-items.json', JSON.stringify(items));
             }
+        } else {
+            console.log("cannot get current IDs")
+            return
         }
-        // fs.writeFileSync('./mcf-items.json', JSON.stringify(items));
+    } catch (e) {
+        console.log('getAllJobs failure')
+        console.log(e)
     }
     return
 }

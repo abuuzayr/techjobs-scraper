@@ -1,10 +1,9 @@
-require('dotenv').config({ path: __dirname + '/.env' })
+
 const COOKIE = process.env.LI_AT_COOKIE
 const cheerio = require('cheerio');
 const fs = require('fs');
 const request = require('request-promise');
 const Entities = require('html-entities').XmlEntities;
-const getProxy = require('./get-proxies').getProxy
  
 const debugFile = './assets/debug.json';
 
@@ -115,11 +114,9 @@ async function getCompanyOrPeopleDetails(url) {
 		fs.writeFileSync(debugFile, '');
 
 	console.log(`Sending request to ${url}...`);
-	const [proxy_host, proxy_port] = getProxy()
 	const html = await request({ 
 		url, 
 		jar,
-		proxy: `http://${proxy_host}:${proxy_port}`
 	 });
 	const $ = cheerio.load(html);
 	let data, result = { linkedinUrl: url.replace('/about/', '') };
