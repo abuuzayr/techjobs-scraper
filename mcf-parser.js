@@ -102,6 +102,23 @@ async function parse() {
         let allAggIds = await axios.get(`${process.env.TECHJOBS_API}/api/getAllJobs`)
         if (allAggIds) {
             allAggIds = allAggIds.data.filter(job => job.aggId && job.aggId.includes('MCF-----')).map(job => job.aggId.replace('MCF-----', ''))
+            for (let url of urls) {
+                while (true) {
+                    try {
+                        const response = await axios.get(url)
+                        const results = response.data.results.filter(job => !allAggIds.includes(job.uuid))
+                        console.log(results.length)
+                        for (let i = 0; i < results.length; i++) {
+                            await parseToPost(results[i])
+                        }
+                        url = response.data._links.next && response.data._links.next.href
+                        if (!url) break
+                    } catch (e) {
+                        console.log(e)
+                    }
+                }
+                // fs.writeFileSync('./mcf-items.json', JSON.stringify(items));
+            }
         } else {
             console.log("cannot get current IDs")
             return
@@ -109,24 +126,6 @@ async function parse() {
     } catch (e) {
         console.log('getAllJobs failure')
         console.log(e)
-    }
-
-    for (let url of urls) {
-        while (true) {
-            try {
-                const response = await axios.get(url)
-                const results = response.data.results.filter(job => !allAggIds.includes(job.uuid))
-                console.log(results.length)
-                for (let i = 0; i < results.length; i++) {
-                    await parseToPost(results[i])
-                }
-                url = response.data._links.next && response.data._links.next.href
-                if (!url) break
-            } catch (e) {
-                console.log(e)
-            }
-        }
-        // fs.writeFileSync('./mcf-items.json', JSON.stringify(items));
     }
     return
 }
