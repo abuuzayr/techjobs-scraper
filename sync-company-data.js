@@ -230,7 +230,8 @@ async function sync() {
                 if (company.gdRating !== data.rating) company.gdRating = parseFloat(data.rating)
                 if (company.gdReviewCount !== data.reviewCount) company.gdReviewCount = parseInt(data.reviewCount)
                 const { id, airtableId, ...dataNoIds } = company
-                await axios({
+                console.log(`Pushing glassdoor data for ${company.name} to baserow..`)
+                const pushStatus = await axios({
                     method: "PATCH",
                     url: `https://api.baserow.io/api/database/rows/table/14835/${id}/`,
                     headers: {
@@ -243,6 +244,15 @@ async function sync() {
                         "field_67945": new Date().toISOString()
                     }
                 })
+                try {
+                    if (pushStatus.response.status === 200) {
+                        console.log(`Successfully updated data to baserow`)
+                    } else {
+                        console.log(`Failed to update data to baserow, error ${pushStatus.response.status}`)
+                    }
+                } catch (e) {
+                    console.log(`Failed to update data to baserow, error ${JSON.stringify(pushStatus.response)}`)
+                }
             } catch (e) {
                 console.log("ERROR updating gd data!: ", e)
             }
