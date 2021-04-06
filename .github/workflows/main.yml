@@ -83,5 +83,6 @@ jobs:
       - name: sync company data
         run: node sync-company-data.js --trace-warnings
         env:
-          AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
+          BASEROW_API_KEY: ${{ secrets.BASEROW_API_KEY }}
+          LI_AT_COOKIE: ${{ secrets.LI_AT_COOKIE }}
           TECHJOBS_API: https://techjobs.sg
