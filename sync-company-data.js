@@ -220,8 +220,13 @@ async function sync() {
                 if (new Date() - new Date(co.gdLastUpdated) < (7 * 24 * 60 * 60 * 1000)) continue
                 const company = { ...co }
                 const scraper = require('./glassdoor-scraper').getGlassdoorData
+                console.log(`Retrieving glassdoor data for ${company.name}`)
                 const data = await scraper(company.gdUrl)
-                if (!data) continue
+                if (!data) {
+                    console.log('No data retrieved!')
+                    continue
+                }
+                console.log(`Data successfully retrieved: ${JSON.stringify(data)}`)
                 if (company.gdRating !== data.rating) company.gdRating = parseFloat(data.rating)
                 if (company.gdReviewCount !== data.reviewCount) company.gdReviewCount = parseInt(data.reviewCount)
                 const { id, airtableId, ...dataNoIds } = company
