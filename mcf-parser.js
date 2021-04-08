@@ -99,7 +99,7 @@ async function parse() {
     ]
 
     try {
-        let allAggIds = await axios.get(`${process.env.TECHJOBS_API}/api/getAllJobs`)
+        let allAggIds = await axios.get(`${process.env.TECHJOBS_API}/api/getAllJobs?select=id&recent=true&aggPrefix=MCF`)
         if (allAggIds) {
             allAggIds = allAggIds.data.filter(job => job.aggId && job.aggId.includes('MCF-----')).map(job => job.aggId.replace('MCF-----', ''))
             for (let url of urls) {

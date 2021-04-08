@@ -117,7 +117,7 @@ async function parse() {
     const itemsPerPage = 50
 
     try {
-        let allAggIds = await axios.get(`${process.env.TECHJOBS_API}/api/getAllJobs`)
+        let allAggIds = await axios.get(`${process.env.TECHJOBS_API}/api/getAllJobs?select=description&recent=true&aggPrefix=ADZ`)
         if (allAggIds) {
             allAggIds = allAggIds.data.filter(job => job.aggId && job.aggId.includes('ADZ-----') && job.description).map(job => job.aggId.replace('ADZ-----', ''))
         } else {
