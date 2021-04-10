@@ -121,42 +121,48 @@ async function reuploadImages(url) {
 
 async function parse() {
   try {
+    // Set up browser and page.
+    const args = [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-accelerated-2d-canvas',
+      '--no-first-run',
+      '--no-zygote',
+      '--single-process',
+      '--disable-gpu'
+    ]
+    const browser = await puppeteer.launch({
+      headless: true,
+      args,
+    });
+    const page = await browser.newPage();
+    page.setViewport({ width: 1280, height: 926 });
+
+    // Navigate to the demo page.
+    await page.goto('https://www.techinasia.com/jobs/search?country_name[]=Singapore', { waitUntil: 'networkidle0', timeout: 0 });
+
+    // Get the number of jobs from the dropdown filter
+    const elem = await page.$$('.container .content span.clickable');
+    let count = 200;
+    if (elem && elem[1]) {
+      await elem[1].click();
+      count = await page.$eval('div.dropdown a.checked small', el => el.textContent);
+    } else {
+      console.log('unable to get drop down element to click')
+      console.log('elements: ', elem)
+    }
+
+    // Scroll and extract items from the page.
+    const items = await scrapeInfiniteScrollItems(page, extractItems, count);
+
+    // // Save extracted items to a file.
+    fs.writeFileSync('./techinasia-items.json', JSON.stringify(items));
 
   } catch (e) {
     console.log('parse failure')
     console.log(e)
   }
-  // Set up browser and page.
-  const args = [
-    '--no-sandbox',
-    '--disable-setuid-sandbox',
-    '--disable-dev-shm-usage',
-    '--disable-accelerated-2d-canvas',
-    '--no-first-run',
-    '--no-zygote',
-    '--single-process',
-    '--disable-gpu'
-  ]
-  const browser = await puppeteer.launch({
-    headless: true,
-    args,
-  });
-  const page = await browser.newPage();
-  page.setViewport({ width: 1280, height: 926 });
-
-  // Navigate to the demo page.
-  await page.goto('https://www.techinasia.com/jobs/search?country_name[]=Singapore', { waitUntil: 'networkidle0', timeout: 0 });
-
-  // Get the number of jobs from the dropdown filter
-  const elem = await page.$$('.container .content span.clickable');
-  await elem[1].click();
-  const count = await page.$eval('div.dropdown a.checked small', el => el.textContent);
-
-  // Scroll and extract items from the page.
-  const items = await scrapeInfiniteScrollItems(page, extractItems, count);
-
-  // // Save extracted items to a file.
-  fs.writeFileSync('./techinasia-items.json', JSON.stringify(items));
 
   // const items = [
   //   {
