@@ -79,12 +79,12 @@ async function downloadImages(url) {
       method: 'GET',
       responseType: 'stream'
     })
+
+    response.data.pipe(writer)
   } catch (e) {
     console.log('unable to get image')
     console.log(e)
   }
-
-  response.data.pipe(writer)
 
   return new Promise((resolve, reject) => {
     writer.on('finish', async () => {
