@@ -71,7 +71,7 @@ async function scrapeInfiniteScrollItems(
 }
 
 async function downloadImages(url) {
-  const p = path.resolve(__dirname, 'images', url.split('/').reverse()[0])
+  const p = path.resolve(__dirname, url.split('/').reverse()[0])
   const writer = fs.createWriteStream(p)
   try {
     const response = await axios({
