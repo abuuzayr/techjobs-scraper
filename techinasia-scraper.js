@@ -120,6 +120,7 @@ async function reuploadImages(url) {
 }
 
 async function parse() {
+  let items = []
   try {
     // Set up browser and page.
     const args = [
@@ -154,7 +155,7 @@ async function parse() {
     }
 
     // Scroll and extract items from the page.
-    const items = await scrapeInfiniteScrollItems(page, extractItems, count);
+    items = await scrapeInfiniteScrollItems(page, extractItems, count);
 
     // // Save extracted items to a file.
     fs.writeFileSync('./techinasia-items.json', JSON.stringify(items));
